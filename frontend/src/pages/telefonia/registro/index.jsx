@@ -17,9 +17,10 @@ export default function PainelTelecom() {
         <div className="user">👤</div>
       </header>
 
-      {/* Submenu */}
+      {/* Submenu */} 
       <div className="submenu">
-        <button className="active">Registro</button>
+        <button className="active">TN</button>
+        <button>Registro</button>
         <button>CNG</button>
         <button>SUP</button>
         <button>Blacklist</button>

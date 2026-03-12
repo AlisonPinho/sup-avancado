@@ -1,0 +1,437 @@
+/* ================================
+   RESET + VARIÁVEIS (DARK FIXO)
+================================ */
+
+  
+  :root {
+    /* FUNDOS */
+    --bg-app: #0f172a;
+    --bg-card: #020617;
+    --header-bg: #020617;
+    --submenu-bg: #020617;
+    --table-head: #020617;
+    --hover-row: rgba(255, 255, 255, 0.04);
+  
+    /* CORES */
+    --primary: #3b82f6;
+    --primary-hover: #60a5fa;
+  
+    /* TEXTO */
+    --text-main: #e5e7eb;
+    --text-muted: #9ca3af;
+  
+    /* BORDAS */
+    --border: #1e293b;
+  }
+  
+  /* ================================
+     BASE
+  ================================ */
+  body {
+    font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
+      Roboto, Helvetica, Arial, sans-serif;
+    background: var(--bg-app);
+    color: var(--text-main);
+  }
+  
+  /* ================================
+     CONTAINER
+  ================================ */
+  .app {
+    max-width: 1150px;
+    margin: 32px auto;
+    background: var(--bg-card);
+    border-radius: 16px;
+    box-shadow: 0 0 0 1px var(--border);
+    overflow: hidden;
+  }
+  
+  /* ================================
+     HEADER
+  ================================ */
+  .header {
+    height: 64px;
+    padding: 0 28px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: var(--header-bg);
+    border-bottom: 1px solid var(--border);
+  }
+  
+  .logo {
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--primary);
+    letter-spacing: -0.3px;
+  }
+  
+  /* ================================
+     MENU PRINCIPAL
+  ================================ */
+  .menu {
+    display: flex;
+    gap: 6px;
+  }
+  
+  .menu button {
+    background: none;
+    border: none;
+    padding: 10px 18px;
+    font-size: 15px;
+    font-weight: 500;
+    color: var(--text-muted);
+    cursor: pointer;
+    border-radius: 10px;
+    transition: all 0.2s ease;
+  }
+  
+  .menu button:hover {
+    background: rgba(59, 130, 246, 0.15);
+    color: var(--primary);
+  }
+  
+  .menu .active {
+    background: rgba(59, 130, 246, 0.18);
+    color: var(--primary);
+  }
+  
+  /* ================================
+     USUÁRIO
+  ================================ */
+  .user {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: rgba(59, 130, 246, 0.15);
+    color: var(--primary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+  }
+  
+  /* ================================
+     SUBMENU
+  ================================ */
+  .submenu {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 14px 28px;
+    background: var(--submenu-bg);
+    border-bottom: 1px solid var(--border);
+  }
+  
+  .submenu button {
+    background: none;
+    border: none;
+    padding: 8px 14px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    color: var(--text-muted);
+    position: relative;
+    transition: color 0.2s ease;
+  }
+  
+  .submenu button:hover {
+    color: var(--primary);
+  }
+  
+  .submenu .active {
+    color: var(--primary);
+  }
+  
+  .submenu .active::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    bottom: -14px;
+    width: 100%;
+    height: 3px;
+    background: var(--primary);
+    border-radius: 2px;
+  }
+  
+  /* ================================
+     INPUT PESQUISA
+  ================================ */
+  .submenu input {
+    margin-left: auto;
+    width: 240px;
+    padding: 9px 14px;
+    border-radius: 10px;
+    border: 1px solid var(--border);
+    background: var(--bg-card);
+    color: var(--text-main);
+    font-size: 14px;
+    transition: border 0.2s ease, box-shadow 0.2s ease;
+  }
+  
+  .submenu input::placeholder {
+    color: #64748b;
+  }
+  
+  .submenu input:focus {
+    outline: none;
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.25);
+  }
+  
+  /* ================================
+     CONTEÚDO
+  ================================ */
+  .content {
+    padding: 28px;
+  }
+  
+  /* ================================
+     TABELA
+  ================================ */
+  table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    font-size: 14px;
+  }
+  
+  thead {
+    background: var(--table-head);
+  }
+  
+  thead th {
+    padding: 16px;
+    text-align: left;
+    font-weight: 600;
+    color: #cbd5f5;
+    border-bottom: 1px solid var(--border);
+  }
+  
+  tbody td {
+    padding: 16px;
+    color: var(--text-main);
+  }
+  
+  tbody tr {
+    transition: background 0.2s ease;
+  }
+  
+  tbody tr:hover {
+    background: var(--hover-row);
+  }
+  
+  /* CANTOS DA TABELA */
+  thead th:first-child {
+    border-top-left-radius: 12px;
+  }
+  
+  thead th:last-child {
+    border-top-right-radius: 12px;
+  }
+  
+  /* ================================
+     SENHA
+  ================================ */
+  .password {
+    letter-spacing: 3px;
+    color: #64748b;
+    user-select: none;
+  }
+  
+  /* ================================
+     RESPONSIVO
+  ================================ */
+  @media (max-width: 1024px) {
+    .menu {
+      display: none;
+    }
+  
+    .submenu {
+      flex-wrap: wrap;
+    }
+  
+    .submenu input {
+      width: 100%;
+      margin-left: 0;
+    }
+  }
+  
+  /* ================================
+   GRID CONTEÚDO (TABELA + STATUS)
+================================ */
+.content-grid {
+    display: grid;
+    grid-template-columns: 1fr 220px;
+    gap: 24px;
+    align-items: start;
+  }
+  
+  .table-wrapper {
+    overflow-x: auto;
+  }
+  
+  /* ================================
+     PAINEL DE STATUS
+  ================================ */
+  .status-panel {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 16px;
+  }
+  
+  /* CABEÇALHO STATUS */
+  .status-header {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    font-size: 13px;
+    color: var(--text-muted);
+    margin-bottom: 18px;
+    text-align: center;
+  }
+  
+  /* LINHA STATUS */
+  .status-row {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    justify-items: center;
+    align-items: center;
+  }
+  
+  /* ================================
+     DOTS (STATUS)
+  ================================ */
+  .dot {
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+  
+
+
+   
+  }
+  
+  /* CORES */
+  .dot.green {
+    background: #84cc16; /* verde limão */
+  }
+  
+  .dot.red {
+    background: #ef4444;
+  }
+  
+  .dot.yellow {
+    background: #eab308;
+  }
+  
+
+  /* =====================
+   VARIÁVEIS (DARK FIXO)
+===================== */
+:root {
+    --bg: #020617;
+    --bg-card: #020617;
+    --border: #1e293b;
+    --text: #e5e7eb;
+    --text-muted: #94a3b8;
+    --primary: #2563eb;
+  }
+  
+  /* =====================
+     BASE
+  ===================== */
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--text);
+    font-family: Inter, system-ui, sans-serif;
+  }
+  
+  .content {
+    padding: 24px;
+  }
+  
+  /* =====================
+     TABELA
+  ===================== */
+  .telecom-table {
+    width: 100%;
+    border-collapse: collapse;
+    background: var(--bg-card);
+    border-radius: 16px;
+    overflow: hidden;
+  }
+  
+  .telecom-table thead {
+    background: #020617;
+  }
+  
+  .telecom-table th {
+    padding: 14px 20px;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text-muted);
+    text-align: center;
+    border-bottom: 1px solid var(--border);
+  }
+  
+  .telecom-table td {
+    padding: 14px 20px;
+    font-size: 14px;
+    text-align: center;
+    border-bottom: 1px solid var(--border);
+  }
+  
+  .telecom-table tbody tr:hover {
+    background: rgba(255, 255, 255, 0.03);
+  }
+  
+  /* =====================
+     SENHA
+  ===================== */
+  .password {
+    letter-spacing: 2px;
+  }
+  
+  /* =====================
+     STATUS
+  ===================== */
+  .status-cell {
+    text-align: center;
+  }
+  
+  /* BOLINHAS */
+  .dot {
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    display: inline-block;
+  }
+  
+  /* CORES */
+  .dot.green {
+    background: #84cc16;
+  }
+  
+  .dot.red {
+    background: #ef4444;
+  }
+  
+  .dot.yellow {
+    background: #eab308;
+  }
+
+  .buttonalterar{
+    background: #2676df57;
+    border: none;
+    border-radius: 20%;
+    padding: 4px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    color: var(--text-muted);
+  }
+  .buttonalterar:hover{
+    background: #1983daa2;
+   
+  }
