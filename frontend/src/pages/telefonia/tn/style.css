@@ -117,8 +117,8 @@
   .submenu {
     display: flex;
     align-items: center;
-    gap: 14px;
-    padding: 14px 28px;
+    gap: 5px;
+    padding: 14px 10px;
     background: var(--submenu-bg);
     border-bottom: 1px solid var(--border);
   }
