@@ -15,11 +15,12 @@ export default function PainelTelecom() {
     sipdevices: [],
     accounts: []
   });
+  const backend = import.meta.env.VITE_URI_BACKEND;
 
   const buscar = async () => {
     if (!valor) return;
 
-    const res = await fetch(`http://localhost:3001/telefonia/tn?tn=${encodeURIComponent(valor)}`);
+    const res = await fetch(`${backend}/telefonia/tn?tn=${encodeURIComponent(valor)}`);
     const data = await res.json();
 
     setDados({
@@ -95,7 +96,7 @@ export default function PainelTelecom() {
               {dados.resultado.length === 0 ? (
                 <tr>
                   <td colSpan={10} style={{ textAlign: "center" }}>
-                    Nenhum resultado
+                    Nenhum resultado na tabela Terminal
                   </td>
                 </tr>
               ) : (
@@ -110,14 +111,10 @@ export default function PainelTelecom() {
                     <td>{item.codcidade}</td>
                     <td>{item.password}</td>
 
-                    <td>
-                      {dados.dids
-                        .filter(did =>
-                          String(did.number).includes(String(item.terminalnumber))
-                        )
-                        .map(did => did.number)
-                        .join(", ")}
-                    </td>
+                    <td>{dados.dids
+                      .filter(did => String(item.terminalnumber).includes(String(did.number)))
+                      .map(did => did.extensions.split("@")[0])
+                      .join(", ")}</td>
 
                     {/* TERMINAL */}
                     <td>
@@ -168,9 +165,73 @@ export default function PainelTelecom() {
 
             </tbody>
 
-            
-          </table>
 
+            <tbody>
+
+              {dados.resultado.length === 0 && dados.dids.length !== 0 && (
+
+                dados.dids.map((item) => (
+
+                  <tr key={item.number}>
+
+                    <td>{item.number}</td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td>{String(item.extensions).split("@")[0]}</td>
+
+                    {/* TERMINAL */}
+                    <td>
+                      {dados.resultado.filter(resultado =>
+                        String(item.terminalnumber).includes(String(resultado.terminalnumber))
+                      ).length > 0
+                        ? <span className="dot green"></span>
+                        : <span className="dot red"></span>}
+                    </td>
+
+                    {/* SIP DEVICES */}
+                    <td>
+                      {dados.sipdevices.filter(sipdevices =>
+                        String(item.terminalnumber).includes(String(sipdevices.username))
+                      ).length > 0
+                        ? <span className="dot green"></span>
+                        : <span className="dot red"></span>}
+                    </td>
+
+                    {/* ACCOUNT */}
+                    <td>
+                      {dados.accounts.filter(accounts =>
+                        String(item.terminalnumber).includes(String(accounts.number))
+                      ).length > 0
+                        ? <span className="dot green"></span>
+                        : <span className="dot red"></span>}
+                    </td>
+
+                    {/* DID */}
+                    <td>
+                      {dados.dids.filter(did =>
+                        String(item.number).includes(String(did.number))
+                      ).length > 0
+                        ? <span className="dot green"></span>
+                        : <span className="dot red"></span>}
+                    </td>
+
+                    <td className="status-cell">
+                      <button className="buttonalterar" title="Alterar Registro">
+                        <PencilLine size={18} />
+                      </button>
+                    </td>
+
+                  </tr>
+
+                ))
+              )}
+
+            </tbody>
+
+
+          </table>
         </div>
       </div>
     </div>

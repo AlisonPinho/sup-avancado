@@ -10,28 +10,30 @@ export default function PainelTelecom() {
   const navigate = useNavigate();
   const [valor, setValor] = useState("");
   const [dados, setDados] = useState([]);
- 
+  const backend = import.meta.env.VITE_URI_BACKEND;
 
   const buscar = async () => {
     if (!valor) return;
 
-    const res = await fetch(`http://localhost:3001/telefonia/registro?tn=${encodeURIComponent(valor)}`);
+
+    const res = await fetch(`${backend}/telefonia/registro?tn=${encodeURIComponent(valor)}`);
     const data = await res.json();
 
     setDados(data.resultado);
+
   };
-  
+
   const deletarRegistro = async (tnid) => {
     try {
       const res = await fetch(
-        `http://localhost:3001/telefonia/registro?tnid=${tnid}`,
+        `${backend}/telefonia/registro?tnid=${tnid}`,
         {
           method: "DELETE"
         }
       );
-  
+
       const data = await res.json();
-  
+
       if (!res.ok) {
         throw new Error(data.erro || "Erro ao deletar");
       }
@@ -42,14 +44,14 @@ export default function PainelTelecom() {
       console.log("Deletado:", data);
       return data;
 
-      
-  
+
+
     } catch (err) {
       console.error("Erro:", err.message);
     }
   };
-  
-  
+
+
   return (
     <div className="app">
 
@@ -124,8 +126,16 @@ export default function PainelTelecom() {
 
 
                     <td className="status-cell">
-                      <button className="buttonalterar" title="Deletar Registro" onClick={() => deletarRegistro(item.id)}>
-                        <Trash2  size={18} />
+                      <button
+                        className="buttonalterar"
+                        title="Deletar Registro"
+                        onClick={() => {
+                          if (window.confirm(`Deseja realmente deletar o registro ${item.reg_user}?`)) {
+                            deletarRegistro(item.id);
+                          }
+                        }}
+                      >
+                        <Trash2 size={18} />
                       </button>
                     </td>
 
