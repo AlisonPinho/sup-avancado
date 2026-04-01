@@ -1,0 +1,222 @@
+/* ═══════════════════════════════════════════════
+   VARIÁVEIS GLOBAIS
+   ═══════════════════════════════════════════════ */
+   :root {
+    /* Paleta base */
+    --bl-blue:          #3b82f6;
+    --bl-blue-hover:    #2563eb;
+    --bl-green:         #38a169;
+    --bl-red:           #e53e3e;
+  
+    /* Superfície e texto */
+    --bl-text-primary:  #e2e8f0;
+    --bl-text-muted:    rgba(255, 255, 255, 0.55);
+    --bl-text-hint:     rgba(255, 255, 255, 0.38); /* era 0.3 — sobe para WCAG AA */
+  
+    /* Bordas e divisores */
+    --bl-border:        rgba(255, 255, 255, 0.08);
+    --bl-border-btn:    rgba(255, 255, 255, 0.25);
+    --bl-border-hover:  rgba(255, 255, 255, 0.5);
+    --bl-row-hover:     rgba(255, 255, 255, 0.03);
+  
+    /* Espaçamentos */
+    --bl-radius:        6px;
+    --bl-gap-sm:        8px;
+    --bl-gap-md:        12px;
+    --bl-gap-lg:        16px;
+  
+    /* Transição padrão */
+    --bl-transition:    0.15s ease;
+  }
+  
+  /* ═══════════════════════════════════════════════
+     WRAPPER
+     ═══════════════════════════════════════════════ */
+  .bl {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  /* ═══════════════════════════════════════════════
+     TOOLBAR
+     ═══════════════════════════════════════════════ */
+  .bl__toolbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;           /* quebra em telas pequenas */
+    gap: var(--bl-gap-md);
+    padding-bottom: 14px;
+  }
+  
+  /* Grupo de filtros de operadora */
+  .bl__filters {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--bl-gap-sm);
+  }
+  
+  /* Botão de operadora (toggle) */
+  .bl__filter-btn {
+    background: transparent;
+    border: 1.5px solid var(--bl-border-btn);
+    color: var(--bl-text-muted);
+    font-size: 13px;
+    font-weight: 500;
+    padding: 5px 16px;
+    border-radius: var(--bl-radius);
+    cursor: pointer;
+    transition:
+      border-color var(--bl-transition),
+      color        var(--bl-transition),
+      background   var(--bl-transition);
+    letter-spacing: 0.3px;
+  }
+  
+  .bl__filter-btn:hover {
+    border-color: var(--bl-border-hover);
+    color: #ffffff;
+  }
+  
+  .bl__filter-btn--active {
+    background: var(--bl-blue);
+    border-color: var(--bl-blue);
+    color: #ffffff;
+    font-weight: 600;
+  }
+  
+  /* ═══════════════════════════════════════════════
+     TABELA
+     ═══════════════════════════════════════════════ */
+  
+  /* Wrapper com scroll horizontal em telas pequenas */
+  .bl__table-wrapper {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+  
+  .bl__table {
+    width: 100%;
+    border-collapse: collapse;
+    min-width: 520px;        /* evita quebra de layout antes do scroll */
+  }
+  
+  /* Cabeçalho */
+  .bl__table thead tr {
+    border-bottom: 1px solid var(--bl-border);
+  }
+  
+  .bl__table th {
+    text-align: left;
+    color: var(--bl-text-muted);
+    font-size: 13px;
+    font-weight: 500;
+    padding: 10px var(--bl-gap-lg);
+  }
+  
+  /* Células */
+  .bl__table td {
+    padding: 14px var(--bl-gap-lg);
+    font-size: 14px;
+    color: var(--bl-text-primary);
+    border-bottom: 1px solid var(--bl-border);
+    vertical-align: middle;
+  }
+  
+  .bl__table tbody tr:last-child td {
+    border-bottom: none;
+  }
+  
+  .bl__table tbody tr:hover td {
+    background: var(--bl-row-hover);
+  }
+  
+  /* ═══════════════════════════════════════════════
+     NÚMERO DE TELEFONE
+     ═══════════════════════════════════════════════ */
+  .bl__number {
+    font-family: "Courier New", monospace;
+    letter-spacing: 0.5px;
+  }
+  
+  /* ═══════════════════════════════════════════════
+     BADGE DE STATUS
+     ═══════════════════════════════════════════════ */
+  .bl__status {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 5px 20px;
+    border-radius: var(--bl-radius);
+    font-size: 13px;
+    font-weight: 600;
+    min-width: 110px;
+  }
+  
+  .bl__status--blocked {
+    background-color: var(--bl-red);
+    color: #ffffff;
+  }
+  
+  .bl__status--active {
+    background-color: var(--bl-green);
+    color: #ffffff;
+  }
+  
+  /* ═══════════════════════════════════════════════
+     AÇÕES
+     ═══════════════════════════════════════════════ */
+  .bl__actions {
+    display: flex;
+    gap: var(--bl-gap-sm);
+    align-items: center;
+  }
+  
+  .bl__action-btn {
+    width: 32px;
+    height: 32px;
+    border: none;
+    border-radius: var(--bl-radius);
+    cursor: pointer;
+    transition:
+      filter    var(--bl-transition),
+      transform var(--bl-transition);
+    /* will-change evita reflow desnecessário durante hover */
+    will-change: transform;
+  }
+  
+  .bl__action-btn:hover  { filter: brightness(1.2); transform: scale(1.08); }
+  .bl__action-btn:active { transform: scale(0.96); }
+  
+  .bl__action-btn--allow { background-color: var(--bl-green); }
+  .bl__action-btn--block { background-color: var(--bl-red); }
+  
+  /* ═══════════════════════════════════════════════
+     ESTADO VAZIO / CARREGANDO
+     ═══════════════════════════════════════════════ */
+  .bl__empty {
+    text-align: center;
+    color: var(--bl-text-hint);
+    font-size: 13px;
+    padding: 32px 0;
+  }
+  
+  /* ═══════════════════════════════════════════════
+     RESPONSIVIDADE
+     ═══════════════════════════════════════════════ */
+  @media (max-width: 600px) {
+    .bl__toolbar {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+  
+    .bl__search-btn {
+      width: 100%;
+      text-align: center;
+    }
+  
+    .bl__status {
+      min-width: auto;
+      padding: 4px 10px;
+    }
+  }

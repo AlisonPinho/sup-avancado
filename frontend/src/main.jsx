@@ -3,9 +3,12 @@ import { createRoot } from 'react-dom/client'
 import './index.css'
 
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import Registro from "./pages/telefonia/registro/index.jsx";
 
 import PainelTelecom from './pages/telefonia/tn/index.jsx'
+import Registro from "./pages/telefonia/registro/index.jsx";
+import Blacklist from "./pages/telefonia/blacklist/index.jsx";
+
+
 
 /*
 export default function App() {
@@ -26,6 +29,7 @@ createRoot(document.getElementById('root')).render(
       <Routes>
         <Route path="/" element={<PainelTelecom />} />
         <Route path="/registro" element={<Registro />} />
+        <Route path="/blacklist" element={<Blacklist />} />
       </Routes>
     </BrowserRouter>
   </StrictMode>,

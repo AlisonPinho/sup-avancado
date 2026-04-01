@@ -43,6 +43,18 @@ const dbConfigFsFreeswitchConnections = mysql.createPool({
     queueLimit: 0
 })
 
+
+const dbConfigOpensips = mysql.createPool({
+  host: '192.168.201.243',
+  port: 3308,
+  user: 'root',
+  password: 'Z1mBr@',
+  database: 'opensips',
+  waitForConnections: true,
+  connectionLimit: 10,
+  queueLimit: 0
+})
+
 app.get('/telefonia/tn', async (req, res) => {
     const tn = req.query.tn
 
@@ -103,5 +115,69 @@ app.delete('/telefonia/registro', async (req, res) => {
         });
       }
 })
+
+
+
+
+
+app.get('/telefonia/blacklist', async (req, res) => {
+  const numero = req.query.numero
+
+  try {
+      const [rows] = await dbConfigOpensips.query('SELECT id, username, whitelist FROM userblacklist WHERE username LIKE ? LIMIT 100',
+      Array(1).fill(`%${numero}%`))
+      res.json({ resultado: rows })
+  } catch (err) {
+      res.status(500).json({ erro: 'Erro ao consultar o banco de dados', detalhes: err.message })
+  }
+})
+
+app.patch('/telefonia/blacklist/:id/desbloquear', async (req, res) => {
+  const { id } = req.params;
+
+  if (!id || isNaN(Number(id))) {
+    return res.status(400).json({ erro: 'ID inválido' });
+  }
+
+  try {
+    const [rows] = await dbConfigOpensips.query(
+      'UPDATE `opensips`.`userblacklist` SET `whitelist` = 1 WHERE `id` = ?',
+      [id]
+    );
+
+    if (rows.affectedRows === 0) {
+      return res.status(404).json({ erro: 'Registro não encontrado' });
+    }
+
+    res.json({ resultado: rows });
+  } catch (err) {
+    res.status(500).json({ erro: 'Erro ao atualizar o banco de dados', detalhes: err.message });
+  }
+});
+
+app.patch('/telefonia/blacklist/:id/bloquear', async (req, res) => {
+  const { id } = req.params;
+
+  if (!id || isNaN(Number(id))) {
+    return res.status(400).json({ erro: 'ID inválido' });
+  }
+
+  try {
+    const [rows] = await dbConfigOpensips.query(
+      'UPDATE `opensips`.`userblacklist` SET `whitelist` = 0 WHERE `id` = ?',
+      [id]
+    );
+
+    if (rows.affectedRows === 0) {
+      return res.status(404).json({ erro: 'Registro não encontrado' });
+    }
+
+    res.json({ resultado: rows });
+  } catch (err) {
+    res.status(500).json({ erro: 'Erro ao atualizar o banco de dados', detalhes: err.message });
+  }
+});
+
+
 
 module.exports = app
