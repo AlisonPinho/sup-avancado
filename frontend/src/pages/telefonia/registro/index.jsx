@@ -41,8 +41,8 @@ export default function PainelTelecom() {
         />
       }
     >
-      <div className="content">
-        <table className="telecom-table">
+      <div className="content-registro">
+        <table className="telecom-table-registro">
 
           <thead>
             <tr>
@@ -76,7 +76,8 @@ export default function PainelTelecom() {
                         }
                       }}
                     >
-                      <Trash2 size={18} />
+                      Remover
+                      {/*<Trash2 size={18} />*/}
                     </button>
                   </td>
                 </tr>

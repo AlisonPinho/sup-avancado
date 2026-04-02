@@ -26,7 +26,7 @@ export default function Layout({ children, submenuAtivo, input }) {
         <button className={submenuAtivo === "ldi" ? "active" : ""} title="Ligação Internacional">LDI</button>
         <button className={submenuAtivo === "lac" ? "active" : ""} title="Ligação a Cobrar">LAC</button>
         <button className={submenuAtivo === "al" ? "active" : ""} title="Aréa Local">AL</button>
-        <button className={submenuAtivo === "tecnico" ? "active" : ""} title="Número de Técnico">Tecnico</button>
+        <button className={submenuAtivo === "tecnico" ? "active" : ""} title="Número de Técnico" onClick={() => navigate("/tecnico")}>Tecnico</button>
         <button className={submenuAtivo === "gs" ? "active" : ""} title="Provisionador de Telefone IP GrandStream">GS</button>
         <button className={submenuAtivo === "consultalog" ? "active" : ""} title="Redirecionar Número">ConsultaLog</button>
         <button className={submenuAtivo === "rastreador" ? "active" : ""} title="Rastrear Chamada">Rastreador</button>
