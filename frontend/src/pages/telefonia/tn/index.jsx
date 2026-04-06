@@ -359,9 +359,9 @@ export default function PainelTelecom() {
                       : <span className="dot red"></span>}
                   </td>
 
-                 
+
                   <td><button className="buttonalterar" onClick={() => abrirModal(item)}><PencilLine size={18} /></button></td>
-                  
+
                 </tr>
               ))}
             </tbody>
@@ -422,15 +422,107 @@ export default function PainelTelecom() {
                         : <span className="dot red"></span>}
                     </td>
 
-                    
+
                     <td><button className="buttonalterar" onClick={() => abrirModal(item)}><PencilLine size={18} /></button></td>
-                   
+
                   </tr>
                 ))}
             </tbody>
           )}
 
 
+          {/* CASO 4: só account encontrados (sem resultado) */}
+          {dados.resultado.length === 0 && dados.dids.length === 0 && dados.accounts !== 0 && (
+            <tbody>
+              {dados.accounts.map((item) => (
+                <tr key={item.number}>
+                  <td>{item.number}</td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td>{String(item.extensions).split("@")[0]}</td>
+
+                  {/* TERMINAL — sempre vermelho pois resultado está vazio */}
+                  <td><span className="dot red"></span></td>
+
+                  {/* SIP DEVICES */}
+                  <td>
+                    {dados.sipdevices.filter(s =>
+                      String(s.username).includes(String(item.number))
+                    ).length > 0
+                      ? <span className="dot green"></span>
+                      : <span className="dot red"></span>}
+                  </td>
+
+                  {/* ACCOUNT */}
+                  <td>
+                    {dados.accounts.filter(a =>
+                      String(a.number).includes(String(item.number))
+                    ).length > 0
+                      ? <span className="dot green"></span>
+                      : <span className="dot red"></span>}
+                  </td>
+
+                  {/* DID */}
+                  <td>
+                    {dados.dids.filter(did =>
+                      String(item.number).includes(String(did.number))
+                    ).length > 0
+                      ? <span className="dot green"></span>
+                      : <span className="dot red"></span>}
+                  </td>
+
+
+                  <td><button className="buttonalterar" onClick={() => abrirModal(item)}><PencilLine size={18} /></button></td>
+
+                </tr>
+              ))}
+            </tbody>
+          )}
+
+
+
+          {/* CASO : só sipdevices encontrados (sem resultado) */}
+          {dados.resultado.length === 0 && dados.dids.length === 0 && dados.accounts.length === 0 && dados.sipdevices !== 0 && (
+            <tbody>
+              {dados.sipdevices.map((item) => (
+                <tr key={item.username}>
+                  <td>{item.username}</td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td>{String(item.extensions).split("@")[0]}</td>
+
+                 
+                  <td><span className="dot red"></span></td>
+
+                  {/* SIP DEVICES */}
+                  <td>
+                    <span className="dot green"></span>
+
+                  </td>
+
+                  {/* ACCOUNT */}
+                  <td>
+
+                    <span className="dot red"></span>
+                  </td>
+
+                  {/* DID */}
+                  <td>
+
+                    <span className="dot red"></span>
+                  </td>
+
+
+                  <td><button className="buttonalterar" onClick={() => abrirModal(item)}><PencilLine size={18} /></button></td>
+
+                </tr>
+              ))}
+            </tbody>
+          )}
 
 
         </table>
