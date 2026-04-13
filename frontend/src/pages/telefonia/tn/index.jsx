@@ -80,12 +80,13 @@ function ModalEdicao({ aberto, onFechar, registro, dados, onSalvar }) {
     if (!registro) return;
 
     const tn = String(registro.terminalnumber ?? registro.number ?? "");
-    const sip = dados.sipdevices.find(s => tn.includes(String(s.username))) || null;
-    const acc = dados.accounts.find(a => tn.includes(String(a.number))) || null;
+    const sip = dados.sipdevices.find(s => tn.includes(String(s.username))) || dados.sipdevices.find(s => s.username.includes(String(registro.number))) || null;
+    const acc = dados.accounts.find(a => tn.includes(String(a.number))) || dados.account.find(s => s.username.includes(String(registro.number))) || null;
     const did = dados.dids.find(d => tn.includes(String(d.number))) || null;
 
     let sipPassword = "";
     try { sipPassword = JSON.parse(sip?.dir_params || "{}").password ?? ""; } catch { }
+    try { sipPassword = JSON.parse(sip?.dir_params || "{}").PASSWORD ?? ""; } catch { }
     let sipCallerId = "";
     try { sipCallerId = JSON.parse(sip?.dir_vars || "{}").effective_caller_id_number ?? ""; } catch { }
 
@@ -115,6 +116,8 @@ function ModalEdicao({ aberto, onFechar, registro, dados, onSalvar }) {
     setForm(valores);
     setOriginal(valores);
   }, [registro, dados]);
+  //console.log("Form atualizado:", form);
+
 
   const set = (key, val) => setForm(f => ({ ...f, [key]: val }));
 
@@ -431,8 +434,9 @@ export default function PainelTelecom() {
           )}
 
 
+
           {/* CASO 4: só account encontrados (sem resultado) */}
-          {dados.resultado.length === 0 && dados.dids.length === 0 && dados.accounts !== 0 && (
+          {dados.resultado.length === 0 && dados.dids.length === 0 && dados.accounts.length !== 0 && dados.sipdevices.length === 0 && (
             <tbody>
               {dados.accounts.map((item) => (
                 <tr key={item.number}>
@@ -495,7 +499,7 @@ export default function PainelTelecom() {
                   <td></td>
                   <td>{String(item.extensions).split("@")[0]}</td>
 
-                 
+
                   <td><span className="dot red"></span></td>
 
                   {/* SIP DEVICES */}
@@ -524,6 +528,46 @@ export default function PainelTelecom() {
             </tbody>
           )}
 
+          {/* CASO : só sipdevices encontrados (sem resultado) */}
+          {dados.resultado.length === 0 && dados.dids.length === 0 && dados.accounts.length !== 0 && dados.sipdevices !== 0 && (
+            <tbody>
+              {dados.accounts.map((item) => (
+                <tr key={item.number}>
+                  <td>{item.number}</td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td>{String(item.extensions).split("@")[0]}</td>
+
+
+                  <td><span className="dot red"></span></td>
+
+                  {/* SIP DEVICES */}
+                  <td>
+                    <span className="dot green"></span>
+
+                  </td>
+
+                  {/* ACCOUNT */}
+                  <td>
+
+                    <span className="dot green"></span>
+                  </td>
+
+                  {/* DID */}
+                  <td>
+
+                    <span className="dot red"></span>
+                  </td>
+
+
+                  <td><button className="buttonalterar" onClick={() => abrirModal(item)}><PencilLine size={18} /></button></td>
+
+                </tr>
+              ))}
+            </tbody>
+          )}
 
         </table>
       </div>

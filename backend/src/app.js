@@ -7,36 +7,42 @@ const app = express()
 app.use(cors())
 app.use(express.json())
 
-/*
 
-app.get('/telefonia/tn', async (req, res)=> {
-    const tn = req.body.tn
 
-    const conection = await 
 
-    res.json({"TN enviado": tn})
-})
 
-*/
-
-// Configuração da conexão com o MariaDB fs.voice
 const dbConfigFsAsttpProducao = mysql.createPool({
-  host: '192.168.201.243',
-  port: 3308,
-  user: 'root',
-  password: 'Z1mBr@',
-  database: 'asttp_producao',
+  host: '192.168.200.253',
+  port: 3306,
+  user: 'valenet',
+  password: 'expl@de!',
+  database: 'astpp_producao',
   waitForConnections: true,
   connectionLimit: 10,
   queueLimit: 0
 })
 
+/*
 
-const dbConfigFsFreeswitchConnections = mysql.createPool({
+const dbConfigFsAsttpProducao = mysql.createPool({
   host: '192.168.201.243',
   port: 3308,
   user: 'root',
   password: 'Z1mBr@',
+  database: 'astpp_producao',
+  waitForConnections: true,
+  connectionLimit: 10,
+  queueLimit: 0
+})
+
+*/
+
+//Ja está no bando de produção
+const dbConfigFsFreeswitchConnections = mysql.createPool({
+  host: '192.168.200.253',
+  port: 3306,
+  user: 'valenet',
+  password: 'expl@de!',
   database: 'freeswitch_connections',
   waitForConnections: true,
   connectionLimit: 10,
@@ -44,16 +50,54 @@ const dbConfigFsFreeswitchConnections = mysql.createPool({
 })
 
 
-const dbConfigOpensips = mysql.createPool({
-  host: '192.168.201.243',
-  port: 3308,
-  user: 'root',
-  password: 'Z1mBr@',
-  database: 'opensips',
-  waitForConnections: true,
-  connectionLimit: 10,
-  queueLimit: 0
-})
+
+
+//Ja está no bando de produção
+const dbBlacklistPorOperadora = {
+  Vivo: mysql.createPool({
+    host: '192.168.100.28',
+    port: 3306,
+    user: 'opensips',
+    password: 'opensipsrw',
+    database: 'opensips',
+    waitForConnections: true,
+    connectionLimit: 10,
+    queueLimit: 0
+  }),
+  Claro: mysql.createPool({
+    host: '192.168.100.30',
+    port: 3306,
+    user: 'opensips',
+    password: 'opensipsrw',
+    database: 'opensips',
+    waitForConnections: true,
+    connectionLimit: 10,
+    queueLimit: 0
+  }),
+  Tim: mysql.createPool({
+    host: '192.168.100.27',
+    port: 3306,
+    user: 'opensips',
+    password: 'opensipsrw',
+    database: 'opensips',
+    waitForConnections: true,
+    connectionLimit: 10,
+    queueLimit: 0
+  }),
+  Oi: mysql.createPool({
+    host: '192.168.100.29',
+    port: 3306,
+    user: 'opensips',
+    password: 'opensipsrw',
+    database: 'opensips',
+    waitForConnections: true,
+    connectionLimit: 10,
+    queueLimit: 0
+  }),
+};
+
+
+
 
 //Ja está no bando de produção
 const dbConfigCallcenter = mysql.createPool({
@@ -70,26 +114,50 @@ const dbConfigCallcenter = mysql.createPool({
 
 app.get('/telefonia/tn', async (req, res) => {
   const tn = req.query.tn
+  const like = `%${tn}%`
 
   try {
-    const [rows] = await dbConfigFsAsttpProducao.query('SELECT terminalid,terminaltipo,codcidade,codinst,terminalnumber,password,dataativacao,datacancelamento,osid FROM terminal WHERE terminalid LIKE ? OR terminaltipo LIKE ? OR codcidade LIKE ? OR codinst LIKE ? OR terminalnumber LIKE ? OR password LIKE ? OR dataativacao LIKE ? OR datacancelamento LIKE ? OR osid LIKE ? LIMIT 100',
-      Array(9).fill(`%${tn}%`))
-    const [rowsdids] = await dbConfigFsAsttpProducao.query('SELECT number,extensions FROM dids WHERE number LIKE ? OR extensions LIKE ? LIMIT 100',
-      Array(2).fill(`%${tn}%`))
-    const [rowssipdevices] = await dbConfigFsAsttpProducao.query('SELECT username,dir_params,dir_vars FROM sip_devices WHERE username LIKE ? OR dir_params LIKE ? OR dir_vars LIKE ? LIMIT 100',
-      Array(3).fill(`%${tn}%`))
-    const [rowsaccounts] = await dbConfigFsAsttpProducao.query('SELECT number,password FROM accounts WHERE number LIKE ? OR password LIKE ? LIMIT 100',
-      Array(2).fill(`%${tn}%`))
-    res.json({
-      resultado: rows,
-      dids: rowsdids,
-      sipdevices: rowssipdevices,
-      accounts: rowsaccounts
-    })
+    const [
+      [rows],
+      [rowsdids],
+      [rowssipdevices],
+      [rowsaccounts]
+    ] = await Promise.all([
+      dbConfigFsAsttpProducao.query(
+        `SELECT terminalid, terminaltipo, codcidade, codinst, terminalnumber,
+                dataativacao, datacancelamento, osid, password
+         FROM terminal
+         WHERE terminalnumber LIKE ? OR codcidade LIKE ? OR codinst LIKE ?
+         LIMIT 10`,
+        [like, like, like]
+      ),
+      dbConfigFsAsttpProducao.query(
+        `SELECT number, extensions FROM dids
+         WHERE number LIKE ? OR extensions LIKE ?
+         LIMIT 100`,
+        [like, like]
+      ),
+      dbConfigFsAsttpProducao.query(
+        `SELECT username, dir_params, dir_vars FROM sip_devices
+         WHERE username LIKE ?
+         LIMIT 10`,
+        [like]
+      ),
+      dbConfigFsAsttpProducao.query(
+        `SELECT number, password FROM accounts
+         WHERE number LIKE ?
+         LIMIT 10`,
+        [like]
+      )
+    ])
+
+    res.json({ resultado: rows, dids: rowsdids, sipdevices: rowssipdevices, accounts: rowsaccounts })
   } catch (err) {
     res.status(500).json({ erro: 'Erro ao consultar o banco de dados', detalhes: err.message })
   }
 })
+
+
 
 app.get('/telefonia/registro', async (req, res) => {
   const tn = req.query.tn
@@ -133,63 +201,104 @@ app.delete('/telefonia/registro', async (req, res) => {
 
 
 
+
+
+
+
+
+
+
+
+
+
 app.get('/telefonia/blacklist', async (req, res) => {
-  const numero = req.query.numero
+  const { numero, operadora } = req.query;
+
+  if (!operadora) {
+    return res.status(400).json({ erro: 'Operadora é obrigatória' });
+  }
+
+  const pool = dbBlacklistPorOperadora[operadora];
+  if (!pool) {
+    return res.status(400).json({ erro: `Operadora inválida: ${operadora}` });
+  }
 
   try {
-    const [rows] = await dbConfigOpensips.query('SELECT id, username, whitelist FROM userblacklist WHERE username LIKE ? LIMIT 100',
-      Array(1).fill(`%${numero}%`))
-    res.json({ resultado: rows })
+    const [rows] = await pool.query(
+      'SELECT id, username, whitelist FROM userblacklist WHERE username LIKE ? LIMIT 100',
+      [`%${numero}%`]
+    );
+    res.json({ resultado: rows });
   } catch (err) {
-    res.status(500).json({ erro: 'Erro ao consultar o banco de dados', detalhes: err.message })
+    res.status(500).json({ erro: 'Erro ao consultar o banco de dados', detalhes: err.message });
   }
-})
+});
+
 
 app.patch('/telefonia/blacklist/:id/desbloquear', async (req, res) => {
   const { id } = req.params;
+  const { operadora } = req.query; // ← recebe operadora
 
   if (!id || isNaN(Number(id))) {
     return res.status(400).json({ erro: 'ID inválido' });
   }
+  if (!operadora) {
+    return res.status(400).json({ erro: 'Operadora é obrigatória' });
+  }
+
+  const pool = dbBlacklistPorOperadora[operadora];
+  if (!pool) {
+    return res.status(400).json({ erro: `Operadora inválida: ${operadora}` });
+  }
 
   try {
-    const [rows] = await dbConfigOpensips.query(
-      'UPDATE `opensips`.`userblacklist` SET `whitelist` = 1 WHERE `id` = ?',
+    const [rows] = await pool.query(
+      'UPDATE `userblacklist` SET `whitelist` = 1 WHERE `id` = ?',
       [id]
     );
-
     if (rows.affectedRows === 0) {
       return res.status(404).json({ erro: 'Registro não encontrado' });
     }
-
     res.json({ resultado: rows });
   } catch (err) {
     res.status(500).json({ erro: 'Erro ao atualizar o banco de dados', detalhes: err.message });
   }
 });
+
 
 app.patch('/telefonia/blacklist/:id/bloquear', async (req, res) => {
   const { id } = req.params;
+  const { operadora } = req.query; // ← recebe operadora
 
   if (!id || isNaN(Number(id))) {
     return res.status(400).json({ erro: 'ID inválido' });
   }
+  if (!operadora) {
+    return res.status(400).json({ erro: 'Operadora é obrigatória' });
+  }
+
+  const pool = dbBlacklistPorOperadora[operadora];
+  if (!pool) {
+    return res.status(400).json({ erro: `Operadora inválida: ${operadora}` });
+  }
 
   try {
-    const [rows] = await dbConfigOpensips.query(
-      'UPDATE `opensips`.`userblacklist` SET `whitelist` = 0 WHERE `id` = ?',
+    const [rows] = await pool.query(
+      'UPDATE `userblacklist` SET `whitelist` = 0 WHERE `id` = ?',
       [id]
     );
-
     if (rows.affectedRows === 0) {
       return res.status(404).json({ erro: 'Registro não encontrado' });
     }
-
     res.json({ resultado: rows });
   } catch (err) {
     res.status(500).json({ erro: 'Erro ao atualizar o banco de dados', detalhes: err.message });
   }
 });
+
+
+
+
 
 
 
@@ -276,7 +385,7 @@ app.post('/telefonia/tecnico', async (req, res) => {
 
 app.post('/telefonia/terminal', async (req, res) => {
   const { terminalid, terminaltipo, terminalnumber, password,
-          codcidade, codinst, osid, dataativacao, datacancelamento } = req.body
+    codcidade, codinst, osid, dataativacao, datacancelamento } = req.body
 
   if (!terminalnumber) return res.status(400).json({ erro: 'terminalnumber é obrigatório' })
 
@@ -298,7 +407,7 @@ app.post('/telefonia/terminal', async (req, res) => {
            datacancelamento  = ?
          WHERE terminalid = ?`,
         [terminaltipo, password, codcidade, codinst, osid,
-         dataativacao || null, datacancelamento || null, terminalid]
+          dataativacao || null, datacancelamento || null, terminalid]
       )
     } else {
       // ── CRIAR: precisa de codcont e codclie — vem do body ou usa 0 como fallback ──
@@ -310,8 +419,8 @@ app.post('/telefonia/terminal', async (req, res) => {
             osid, dataativacao, datacancelamento)
          VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
         [codcont, codclie, terminaltipo, codcidade, codinst,
-         terminalnumber, password, codstatus, canaissimultaneos,
-         osid || null, dataativacao || null, datacancelamento || null]
+          terminalnumber, password, codstatus, canaissimultaneos,
+          osid || null, dataativacao || null, datacancelamento || null]
       )
     }
 
@@ -352,10 +461,10 @@ app.post('/telefonia/sip', async (req, res) => {
     if (rows.length > 0) {
       // ── EDITAR: reconstrói os JSONs preservando outros campos ──
       const parsedParams = JSON.parse(rows[0].dir_params || '{}')
-      const parsedVars   = JSON.parse(rows[0].dir_vars   || '{}')
+      const parsedVars = JSON.parse(rows[0].dir_vars || '{}')
 
       if (sip_dir_params !== undefined) parsedParams.password = sip_dir_params
-      if (sip_dir_vars   !== undefined) parsedVars.effective_caller_id_number = sip_dir_vars
+      if (sip_dir_vars !== undefined) parsedVars.effective_caller_id_number = sip_dir_vars
 
       await dbConfigFsAsttpProducao.query(
         'UPDATE sip_devices SET dir_params = ?, dir_vars = ? WHERE username = ?',
@@ -367,18 +476,18 @@ app.post('/telefonia/sip', async (req, res) => {
         'SELECT terminalid FROM terminal WHERE terminalnumber LIKE ? LIMIT 1',
         [`%${sip_username}%`]
       )
-      const accountid   = termRows[0]?.terminalid ?? 0
+      const accountid = termRows[0]?.terminalid ?? 0
       const sip_profile_id = 1
 
       const newParams = JSON.stringify({ password: sip_dir_params ?? '' })
       const last8 = sip_username.slice(-8);
-      
-      
+
+
       await dbConfigFsAsttpProducao.query(
         `INSERT INTO sip_devices
            (username, sip_profile_id, accountid, pricelist_id, dir_params, id,dir_vars)
          VALUES (?, ?, ?, ?, ?, ?, ?)`,
-        [sip_username, sip_profile_id, accountid, 2, newParams, last8, '{"effective_caller_id_name":"'+sip_username+'","effective_caller_id_number":"'+sip_username+'}","user_context":"default"}']  // ← id = last8 do username
+        [sip_username, sip_profile_id, accountid, 2, newParams, last8, '{"effective_caller_id_name":"' + sip_username + '","effective_caller_id_number":"' + sip_username + '}","user_context":"default"}']  // ← id = last8 do username
       )
     }
 
@@ -429,7 +538,7 @@ app.post('/telefonia/account', async (req, res) => {
       )
     } else {
       // ── CRIAR: campos NOT NULL sem default recebem valores neutros ──
-      
+
       await dbConfigFsAsttpProducao.query(
         `INSERT INTO accounts
            ( \`number\`, password, pricelist_id, id, dialed_modify)
@@ -495,7 +604,7 @@ app.post('/telefonia/did', async (req, res) => {
             dial_as, call_type, inuse, variables)
          VALUES (?, ?, ?, 0, 0.00, 0, 0.00, 0.00, 0, 1, 0, 0, 0, 0.00, 1, 0.00, 0, 1, 0, '', 0, 0, '')`,
         [did_number,      // ← id = did_number
-         did_number, extensionFull]
+          did_number, extensionFull]
       )
     }
 

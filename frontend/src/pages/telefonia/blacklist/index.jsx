@@ -14,7 +14,8 @@ export default function Blacklist() {
 
   // ── Busca ────────────────────────────────────────────────────────
   const buscar = useCallback(async () => {
-    if (!valor.trim()) return;
+    if (!valor.trim() || !operadora) return; // ← exige operadora
+
     setLoading(true);
     try {
       const url = new URL(`${BACKEND}/telefonia/blacklist`);
@@ -25,6 +26,8 @@ export default function Blacklist() {
       if (!res.ok) throw new Error(`HTTP ${res.status}`);
       const data = await res.json();
       setDados(data.resultado ?? []);
+
+
     } catch (err) {
       console.error("Erro ao buscar:", err.message);
       setDados([]);
@@ -33,25 +36,27 @@ export default function Blacklist() {
     }
   }, [valor, operadora]);
 
+
   // ── Desbloquear ──────────────────────────────────────────────────
   const desbloquear = useCallback(async (id) => {
     try {
-      const res = await fetch(`${BACKEND}/telefonia/blacklist/${id}/desbloquear`, {
+      const res = await fetch(`${BACKEND}/telefonia/blacklist/${id}/desbloquear?operadora=${operadora}`, {
         method: "PATCH",
       });
       if (!res.ok) throw new Error(`HTTP ${res.status}`);
       setDados((prev) =>
         prev.map((item) => (item.id === id ? { ...item, whitelist: 1 } : item))
       );
+
     } catch (err) {
       console.error("Erro ao desbloquear:", err.message);
     }
-  }, []);
+  }, [operadora]);
 
   // ── Bloquear ──────────────────────────────────────────────────
   const bloquear = useCallback(async (id) => {
     try {
-      const res = await fetch(`${BACKEND}/telefonia/blacklist/${id}/bloquear`, {
+      const res = await fetch(`${BACKEND}/telefonia/blacklist/${id}/bloquear?operadora=${operadora}`, {
         method: "PATCH",
       });
       if (!res.ok) throw new Error(`HTTP ${res.status}`);
@@ -61,7 +66,7 @@ export default function Blacklist() {
     } catch (err) {
       console.error("Erro ao bloquear:", err.message);
     }
-  }, []);
+  }, [operadora]);
 
   // ── Deletar ──────────────────────────────────────────────────────
   const deletar = useCallback(async (id) => {
@@ -100,6 +105,7 @@ export default function Blacklist() {
         </tr>
       );
     }
+
 
     return dados.map((item) => {
       const bloqueado = item.whitelist === 0;
@@ -169,6 +175,10 @@ export default function Blacklist() {
               </button>
             ))}
           </div>
+          {/* abaixo dos filtros */}
+          {!operadora && (
+            <span className="bl__hint">Selecione uma operadora para pesquisar</span>
+          )}
         </div>
 
         {/* Tabela */}
@@ -183,9 +193,11 @@ export default function Blacklist() {
             </thead>
             <tbody>{renderRows()}</tbody>
           </table>
+
         </div>
 
       </div>
+
     </Layout>
   );
 }
