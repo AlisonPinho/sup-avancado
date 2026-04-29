@@ -81,7 +81,7 @@ function ModalEdicao({ aberto, onFechar, registro, dados, onSalvar }) {
 
     const tn = String(registro.terminalnumber ?? registro.number ?? "");
     const sip = dados.sipdevices.find(s => tn.includes(String(s.username))) || dados.sipdevices.find(s => s.username.includes(String(registro.number))) || null;
-    const acc = dados.accounts.find(a => tn.includes(String(a.number))) || dados.account.find(s => s.username.includes(String(registro.number))) || null;
+    const acc = dados.accounts.find(a => tn.includes(String(a.number)))  || null;
     const did = dados.dids.find(d => tn.includes(String(d.number))) || null;
 
     let sipPassword = "";

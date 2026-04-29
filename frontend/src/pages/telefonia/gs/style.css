@@ -1,0 +1,208 @@
+/* ================================================
+   GS PANEL — estilos adicionais
+   Cole no final do seu style.css existente
+================================================ */
+
+/* ── Sub-abas internas ── */
+.gs-tabs {
+    display: flex;
+    gap: 4px;
+    margin-bottom: 20px;
+    border-bottom: 1px solid var(--border);
+    padding-bottom: 0;
+  }
+  
+  .gs-tab {
+    background: none;
+    border: none;
+    padding: 8px 14px;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text-muted);
+    cursor: pointer;
+    border-bottom: 2px solid transparent;
+    margin-bottom: -1px;
+    transition: color 0.2s, border-color 0.2s;
+  }
+  
+  .gs-tab:hover { color: var(--primary); }
+  .gs-tab.active { color: var(--primary); border-bottom-color: var(--primary); }
+  
+  /* ── Toolbar (stats + botão add) ── */
+  .gs-toolbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 16px;
+    gap: 12px;
+  }
+  
+  .gs-stats {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+  }
+  
+  .gs-stat {
+    font-size: 13px;
+    color: var(--text-muted);
+  }
+  
+  .gs-stat-val {
+    font-weight: 700;
+    color: var(--text-main);
+    margin-right: 3px;
+  }
+  
+  .gs-stat-val.gs-green { color: #84cc16; }
+  
+  /* ── Breadcrumb (view tags) ── */
+  .gs-breadcrumb {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  
+  .gs-back {
+    background: none;
+    border: 1px solid var(--border);
+    color: var(--text-muted);
+    border-radius: 8px;
+    padding: 5px 12px;
+    font-size: 13px;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  
+  .gs-back:hover {
+    color: var(--primary);
+    border-color: var(--primary);
+  }
+  
+  .gs-breadcrumb-sep { color: var(--border); }
+  
+  .gs-breadcrumb-cur {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text-main);
+  }
+  
+  /* ── Mini stats (view tags) ── */
+  .gs-mini-stats {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 16px;
+  }
+  
+  .gs-mini-stat {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 10px 18px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-width: 70px;
+  }
+  
+  .gs-mini-val {
+    font-size: 22px;
+    font-weight: 800;
+    color: var(--text-main);
+    line-height: 1;
+  }
+  
+  .gs-mini-val.gs-green { color: #84cc16; }
+  .gs-mini-val.gs-red   { color: #ef4444; }
+  
+  .gs-mini-label {
+    font-size: 11px;
+    color: var(--text-muted);
+    margin-top: 2px;
+  }
+  
+  /* ── Badges e chips ── */
+  .gs-badge-blue {
+    display: inline-block;
+    padding: 2px 9px;
+    border-radius: 999px;
+    font-size: 12px;
+    font-weight: 500;
+    background: rgba(59, 130, 246, 0.12);
+    color: #60a5fa;
+    border: 1px solid rgba(59, 130, 246, 0.22);
+  }
+  
+  .gs-tag-desc {
+    display: inline-block;
+    padding: 2px 9px;
+    border-radius: 999px;
+    font-size: 12px;
+    background: rgba(124, 106, 247, 0.1);
+    color: #a78bfa;
+    border: 1px solid rgba(124, 106, 247, 0.2);
+  }
+  
+  /* ── Código / Tag ID ── */
+  .gs-code {
+    font-family: 'Courier New', monospace;
+    font-size: 13px;
+    color: var(--text-main);
+  }
+  
+  .gs-code.gs-orange { color: #fb923c; }
+  
+  /* ── Ações ── */
+  .gs-actions {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+  }
+  
+  .buttonalterar.gs-danger {
+    color: #f87171;
+    background: rgba(239, 68, 68, 0.08);
+  }
+  
+  .buttonalterar.gs-danger:hover {
+    background: rgba(239, 68, 68, 0.2);
+  }
+  
+  /* ── Empty state ── */
+  .gs-empty {
+    text-align: center;
+    color: var(--text-muted);
+    padding: 40px 0 !important;
+    font-size: 14px;
+  }
+  
+  /* ── Toast de notificação ── */
+  .gs-toast {
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    z-index: 9999;
+    padding: 12px 20px;
+    border-radius: 10px;
+    font-size: 13px;
+    font-weight: 500;
+    color: #fff;
+    background: #1e3a5f;
+    border: 1px solid #2563eb;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.5);
+    transform: translateY(20px);
+    opacity: 0;
+    transition: all 0.3s ease;
+    pointer-events: none;
+  }
+  
+  .gs-toast.gs-toast-error {
+    background: #3b0f14;
+    border-color: #dc2626;
+  }
+  
+  .gs-toast.gs-toast-show {
+    transform: translateY(0);
+    opacity: 1;
+  }

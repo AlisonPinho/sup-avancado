@@ -1,0 +1,81 @@
+/* ================================================
+   CONSULTALOG — estilos adicionais
+   Cole no final do seu style.css existente
+================================================ */
+
+/* ── Paginação ── */
+.cl-pagination {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+  
+  .cl-page-btn {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    color: var(--text-muted);
+    border-radius: 7px;
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.15s;
+    padding: 0;
+  }
+  
+  .cl-page-btn:hover:not(:disabled) {
+    border-color: var(--primary);
+    color: var(--primary);
+    background: rgba(59, 130, 246, 0.08);
+  }
+  
+  .cl-page-btn:disabled {
+    opacity: 0.3;
+    cursor: default;
+  }
+  
+  .cl-page-btn.cl-page-active {
+    background: rgba(59, 130, 246, 0.18);
+    border-color: var(--primary);
+    color: var(--primary);
+    font-weight: 700;
+  }
+  
+  .cl-page-info {
+    font-size: 13px;
+    color: var(--text-muted);
+    padding: 0 6px;
+    white-space: nowrap;
+  }
+  
+  /* ── Spinner de loading ── */
+  .cl-spinner {
+    display: inline-block;
+    width: 14px;
+    height: 14px;
+    border: 2px solid var(--border);
+    border-top-color: var(--primary);
+    border-radius: 50%;
+    animation: cl-spin 0.7s linear infinite;
+    margin-right: 8px;
+    vertical-align: middle;
+  }
+  
+  @keyframes cl-spin {
+    to { transform: rotate(360deg); }
+  }
+  
+  /* ── Search container com botão ── */
+  .search-container {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-left: auto;
+  }
+  
+  .search-container input {
+    margin-left: 0;
+  }
